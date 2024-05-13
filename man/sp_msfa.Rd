@@ -11,6 +11,7 @@ sp_msfa(
   trace = TRUE,
   nprint = 1000,
   outputlevel = 1,
+  scaling = TRUE,
   control = list(...),
   ...
 )
@@ -30,6 +31,8 @@ Default is \code{TRUE}.}
 \item{nprint}{Frequency of tracing information. Default is every 1000 iterations.}
 
 \item{outputlevel}{Detailed level of output data. See Details. Default is 1.}
+
+\item{scaling}{If \code{TRUE} then \eqn{X_s}{X_s} are standardized. Default is \code{TRUE}.}
 
 \item{control}{A list of hyperparameters for the prior distributions and for controlling the Gibbs sampling.
 See \code{sp_msfa_control}.}

@@ -4,7 +4,9 @@
 \name{data_bc_demo}
 \alias{data_bc_demo}
 \title{Breast Cancer Demograhic Information}
-\format{data_bc_demo: demographic information on the patients, obtained by Haibe-Kains et al. (2012)}
+\format{
+data_bc_demo: demographic information on the patients, obtained by Haibe-Kains et al. (2012)
+}
 \usage{
 data_bc_demo
 }

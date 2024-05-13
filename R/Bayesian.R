@@ -58,6 +58,7 @@ sp_msfa_control <- function(nrun = 30000, burn = 20000, thin = 1,
 #' Default is \code{TRUE}.
 #' @param nprint Frequency of tracing information. Default is every 1000 iterations.
 #' @param outputlevel Detailed level of output data. See Details. Default is 1.
+#' @param scaling If \code{TRUE} then \eqn{X_s}{X_s} are standardized. Default is \code{TRUE}.
 #' @param control A list of hyperparameters for the prior distributions and for controlling the Gibbs sampling.
 #' See \code{sp_msfa_control}.
 #' @param ... Arguments to be used to form the default \code{control} argument if it is not supplied directly.
@@ -79,7 +80,7 @@ sp_msfa_control <- function(nrun = 30000, burn = 20000, thin = 1,
 #' Bayesian Multi-study Factor Analysis for High-throughput Biological Data.
 #' Submitted manuscript.
 sp_msfa <- function(X_s,  k,  j_s, trace = TRUE, nprint = 1000,
-                    outputlevel = 1, control = list(...), ...)
+                    outputlevel = 1, scaling = TRUE, control = list(...), ...)
 {
   #### read data ####
   S <- length(X_s)
@@ -124,7 +125,10 @@ sp_msfa <- function(X_s,  k,  j_s, trace = TRUE, nprint = 1000,
 
    for (s in 1:S){
   	n_s[s] <- nrow(X_s[[s]])
-  	Y_s[[s]] <- scale(X_s[[s]])
+  	if (scaling == TRUE) Y_s[[s]] <-
+  	    scale(X_s[[s]])
+  	else Y_s[[s]] <-
+  	    scale(X_s[[s]], center = TRUE, scale = FALSE)
   	a_psi_s[s] <- apsi
   	b_psi_s[s] <- bpsi
   	nu_s[s] <- nus

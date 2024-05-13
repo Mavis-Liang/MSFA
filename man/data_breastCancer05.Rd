@@ -4,10 +4,12 @@
 \name{data_breastCancer05}
 \alias{data_breastCancer05}
 \title{Breast Cancer Data}
-\format{A list of seven different data matrices, each with 6362 genes (variables) and sample size of (118, 353, 200, 99, 198, 133, 344).
+\format{
+A list of seven different data matrices, each with 6362 genes (variables) and sample size of (118, 353, 200, 99, 198, 133, 344).
 This is a collection of publicly available microarray studies compiled by Haibe-Kains et al. (2012). This data considers,
 for each gene, only the probe-set with maximum mean. Also, the analysis considers genes measured in all the seven studies
-and focus on 50 percent of genes with higher variance in each study.}
+and focus on 50 percent of genes with higher variance in each study.
+}
 \usage{
 data_breastCancer05
 }
