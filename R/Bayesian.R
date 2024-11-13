@@ -58,7 +58,8 @@ sp_msfa_control <- function(nrun = 30000, burn = 20000, thin = 1,
 #' Default is \code{TRUE}.
 #' @param nprint Frequency of tracing information. Default is every 1000 iterations.
 #' @param outputlevel Detailed level of output data. See Details. Default is 1.
-#' @param scaling If \code{TRUE} then \eqn{X_s}{X_s} are standardized. Default is \code{TRUE}.
+#' @param scaling (column-wise) If \code{TRUE} then \eqn{X_s}{X_s} are standardized. Default is \code{TRUE}.
+#' @param centering (column-wise) If \code{TRUE} then \eqn{X_s}{X_s} are standardized. Default is \code{TRUE}.
 #' @param control A list of hyperparameters for the prior distributions and for controlling the Gibbs sampling.
 #' See \code{sp_msfa_control}.
 #' @param ... Arguments to be used to form the default \code{control} argument if it is not supplied directly.
@@ -80,12 +81,12 @@ sp_msfa_control <- function(nrun = 30000, burn = 20000, thin = 1,
 #' Bayesian Multi-study Factor Analysis for High-throughput Biological Data.
 #' Submitted manuscript.
 sp_msfa <- function(X_s,  k,  j_s, trace = TRUE, nprint = 1000,
-                    outputlevel = 1, scaling = TRUE, control = list(...), ...)
+                    outputlevel = 1, scaling = TRUE, centering = TRUE, control = list(...), ...)
 {
   #### read data ####
   S <- length(X_s)
   p <- dim(X_s[[1]])[2]                    #variables
-  Y_s <- list()                         #centered data
+  Y_s <- list()                         
   n_s <- c()                            #sample size
 
   ################ setting up priors and initialize
@@ -125,10 +126,11 @@ sp_msfa <- function(X_s,  k,  j_s, trace = TRUE, nprint = 1000,
 
    for (s in 1:S){
   	n_s[s] <- nrow(X_s[[s]])
-  	if (scaling == TRUE) Y_s[[s]] <-
-  	    scale(X_s[[s]])
-  	else Y_s[[s]] <-
-  	    scale(X_s[[s]], center = TRUE, scale = FALSE)
+  	if (scaling == TRUE) Y_s[[s]] <-scale(X_s[[s]])
+  	else {
+		if (centering ==TRUE) Y_s[[s]] <- scale(X_s[[s]], center = TRUE, scale = FALSE)
+		else Y_s[[s]] <- X_s[[s]]
+	}
   	a_psi_s[s] <- apsi
   	b_psi_s[s] <- bpsi
   	nu_s[s] <- nus
@@ -497,6 +499,8 @@ sp_fa_control <- function(nrun = 30000, burn = 20000, thin = 1,
 #'
 #' @param dat Data matrix, of size \eqn{n \times p}{n x p}.
 #' @param k Number of latent factor.
+#' @param scaling (column-wise) If \code{TRUE} then \eqn{X_s}{X_s} are standardized. Default is \code{TRUE}.
+#' @param centering (column-wise) If \code{TRUE} then \eqn{X_s}{X_s} are standardized. Default is \code{TRUE}.
 #' @param trace If \code{TRUE} then trace information is being printed every \code{nprint} iterations of the Gibbs sampling.
 #' Default is \code{TRUE}.
 #' @param nprint Frequency of tracing information. Default is every 1000 iterations.
@@ -513,13 +517,16 @@ sp_fa_control <- function(nrun = 30000, burn = 20000, thin = 1,
 #' @export
 #' @references Bhattacharya, A. and Dunson, D.B. (2011). Sparse Bayesian infinite factor models. Biometrika,
 #' 98, p. 291-306.
-sp_fa <- function(dat, k, trace = TRUE, nprint = 1000, control = list(...), ...)
+sp_fa <- function(dat, k, trace = TRUE, nprint = 1000, scaling = TRUE, centering = TRUE, control = list(...), ...)
 {
   ##### read data
   p <- ncol(dat)
   n <- nrow(dat)
-  Y <- scale(dat)
-
+  if (scaling == TRUE) Y <- scale(dat)
+  else {
+	if (centering == TRUE) Y <- scale(dat, center = TRUE, scale = FALSE)
+  	else Y <- dat
+	}
   #### setting up priors and initialize
   control <- do.call("sp_fa_control", control)
   nrun <- control$nrun
